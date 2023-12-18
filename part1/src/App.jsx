@@ -22,11 +22,11 @@ const Content =(props)=>{
   )
 }
 
-// const Total = (props)=>{
-//   return(
-//     <p>Number of exercises {props.exercises1 + props.exercises2 + props.exercises3}</p>
-//   )
-// }
+const Total = (props)=>{
+  return(
+    <p>Number of exercises {props.exercises1 + props.exercises2 + props.exercises3}</p>
+  )
+}
 
 const App = () => {
   const course = 'Half Stack application development'
@@ -52,7 +52,7 @@ const App = () => {
         exercises2={part2.exercises}
         part3={part3.name}
         exercises3={part3.exercises}/>
-      {/* <Total exercises1={exercises1} exercises2={exercises2} exercises3={exercises3}/> */}
+      <Total exercises1={part1.exercises} exercises2={part2.exercises} exercises3={part3.exercises}/>
       
     </div>
   )
