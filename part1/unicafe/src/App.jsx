@@ -5,9 +5,11 @@ const Button = (props)=> <button onClick = {props.handleClick}> {props.text}</bu
 
 const StatisticLine = (props) => {
   return (
-    <>
-      <p>{props.text} {props.value}</p>
-    </>
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.value}</td>
+    </tr>
+
   )
 }
 
@@ -16,13 +18,18 @@ if(props.good === 0 && props.neutral === 0 & props.bad===0)
   return <p>No feedback given</p>
 
   return (
-    <>
+    <table>
+      <tbody>
+
       <StatisticLine  text='good' value={props.good}/>
       <StatisticLine  text='neutral' value={props.neutral}/>
       <StatisticLine  text='bad' value={props.bad}/>
       <StatisticLine  text='total' value={props.total}/>
       <StatisticLine  text='average' value={props.average}/>
-    </>
+      
+      </tbody>
+    </table>
+
   )
 }
 
