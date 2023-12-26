@@ -6,6 +6,12 @@ const Button = (props)=>{
   )
 }
 
+const Votes = (props)=>{
+  return (
+    <p>{props.value} {props.text}</p>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -17,18 +23,30 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
+  
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes]= useState(Array(anecdotes.length).fill(0))
+
   const hundleSelected = () =>{
     const randomNum = Math.floor(Math.random()*anecdotes.length)
     setSelected(randomNum)
+  }
+
+  const hundleVotes = () =>{
+    const newVotes = [...votes]
+    newVotes[selected]++
+
+    setVotes(newVotes)
+    console.log(newVotes)
   }
   console.log(selected)
   return (
       <>
       <div>
-        {anecdotes[selected]}
+        {anecdotes[selected]} 
       </div>
+      <Votes value={votes[selected]} text='votes'/>
+      <Button  hundleClick={hundleVotes} text='Vote'/>
       <Button  hundleClick={hundleSelected} text='Next anecdote'/>
       </>
   )
