@@ -1,43 +1,11 @@
-const Header = ({course})=> {
-  console.log('header', course);
-  return <h1>{course}</h1>
-}
+import Course from './Course'
 
-const Part = ({part})=> <p>{part.name} {part.exercises}</p>
 
-const Content =({parts})=>{
-  console.log(parts);
-  return(
-    
-    <>
-      {parts.map(part=>
-          <Part  key={part.id} part={part} />
-          )}
-    
-    </>
-    
-  )
-}
 
-const Total = ({parts})=>{
-  return(
-    <p><b>Number of exercises {parts.reduce((acc, cur)=> acc + +cur.exercises,0)}</b></p>
-  )
-}
 
-const Course = ({course}) =>{
 
-  return (
-    <>
-      <Header course={course[0].name} />
-      <Content parts={course[0].parts} />
-      <Total parts={course[0].parts} /> 
-      <Header course={course[1].name} />
-      <Content parts={course[1].parts} />
-      <Total parts={course[1].parts} /> 
-    </>
-  )
-}
+
+
 const App = () => {
   const courses = [
     {
