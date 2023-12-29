@@ -1,16 +1,23 @@
 import { useState } from "react";
 
 const App = () => {
+
+  // State variable for managing persons array and newName
   const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
 
+  // Event handler for add a new name to persons array
   const addName = (event) => {
+    // prevent browser from refresh when submit the form
     event.preventDefault();
     console.log("button Clicked", event.target);
+
+    // Create a new name object and update persons state
     const name = {name:newName} 
     setPersons(persons.concat(name))
   };
 
+  // Event handler for updating newName state as user types
   const handleNameChange = (event) => {
     console.log(event.target.value);
     setNewName(event.target.value);
