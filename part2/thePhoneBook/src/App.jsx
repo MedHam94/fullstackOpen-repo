@@ -14,7 +14,17 @@ const App = () => {
 
     // Create a new name object and update persons state
     const name = {name:newName} 
-    setPersons(persons.concat(name))
+    console.log('this is the name', name.name);
+    
+    for(let i =0; i<persons.length; i++){
+      if(persons[i].name === name.name){
+        alert(`${persons[i].name} is already added to phonebook`)
+        break
+      }else{
+        setPersons(persons.concat(name))
+      }
+    }
+    
   };
 
   // Event handler for updating newName state as user types
