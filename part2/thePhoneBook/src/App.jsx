@@ -1,4 +1,7 @@
 import { useState } from "react";
+import PersonForm from "./PersonForm";
+import Filter from "./Filter";
+import Persons from './Persons'
 
 const App = () => {
   // State variable for managing persons array and newName
@@ -57,29 +60,26 @@ const filterPerson = persons.filter(el=> el.name.toLowerCase().includes(search.t
   return (
     <div>
       <h2>Phonebook</h2>
-      <form>
-        <div>
-          Filter shown with <input value={search} onChange={handleSearchChange} />
-        </div>
-      </form>
+
+      <Filter 
+        search={search}
+        handleSearchChange={handleSearchChange}
+      />
+      
       <h2>Add new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName.name} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber.number} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+
+      <PersonForm 
+        onSubmit={addPerson}
+        newName={newName.name}
+        handleNameChange={handleNameChange}
+        newNumber={newNumber} 
+        handleNumberChange={handleNumberChange}
+      />
+
       <h2>Numbers</h2>
-      <ul>
-        {filterPerson.map((el) => (
-          <li key={el.name}>{el.name} {el.number}</li>
-        ))}
-      </ul>
+
+      <Persons filterPerson={filterPerson}/>
+      
     </div>
   );
 };
