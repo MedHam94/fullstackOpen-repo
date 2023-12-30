@@ -5,9 +5,10 @@ const App = () => {
   const [persons, setPersons] = useState([{ name: "Arto Hellas", number: '040-1234567' }]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [search, setSearch] = useState('');
 
   // Event handler for add a new name to persons array
-  const addName = (event) => {
+  const addPerson = (event) => {
     // prevent browser from refresh when submit the form
     event.preventDefault();
     console.log("button Clicked", event.target);
@@ -31,22 +32,38 @@ const App = () => {
     }
   };
 
+
+
   // Event handler for updating newName state as user types
   const handleNameChange = (event) => {
     console.log('this is input hundler',event.target.value);
     setNewName(event.target.value);
+    
   };
+
   const handleNumberChange = (event) => {
     console.log('this is input hundler',event.target.value);
     setNewNumber(event.target.value);
+    
   };
 
-  console.log(persons);
+  const handleSearchChange = () => {
+    console.log('this is search letter',event.target.value);
+    setSearch(event.target.value);
+  };
+
+const filterPerson = persons.filter(el=> el.name.toLowerCase().includes(search.toLowerCase()))
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addName}>
+      <form>
+        <div>
+          Filter shown with <input value={search} onChange={handleSearchChange} />
+        </div>
+      </form>
+      <h2>Add new</h2>
+      <form onSubmit={addPerson}>
         <div>
           name: <input value={newName.name} onChange={handleNameChange} />
         </div>
@@ -59,7 +76,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map((el) => (
+        {filterPerson.map((el) => (
           <li key={el.name}>{el.name} {el.number}</li>
         ))}
       </ul>
