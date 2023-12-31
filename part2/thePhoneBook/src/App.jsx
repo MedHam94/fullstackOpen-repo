@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from 'axios';
 import PersonForm from "./PersonForm";
 import Filter from "./Filter";
 import Persons from './Persons'
@@ -57,6 +58,14 @@ const App = () => {
 
 const filterPerson = persons.filter(el=> el.name.toLowerCase().includes(search.toLowerCase()))
 
+useEffect(()=>{
+  console.log('effect');
+  axios
+    .get('http://localhost:3001/persons')
+    .then(response =>{
+      
+    })
+})
   return (
     <div>
       <h2>Phonebook</h2>
