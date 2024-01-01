@@ -21,32 +21,18 @@ const App = () => {
 
   // Event handler for add a new name to persons array
   const addPerson = (event) => {
-    // prevent browser from refresh when submit the form
     event.preventDefault();
-    console.log("button Clicked", event.target);
+    const person = { name: newName, number: newNumber };
+    
+    !checkForDuplicates(person) ? setPersons((prevPersons) => [...prevPersons, person]) : alert(`${newName}  is already added to phonebook`)
+  };
 
-    // Create a new name object and update persons state
-    const person = [{ name: newName, number: newNumber }];
-    console.log("this is the name", person[0].name, person[0].number);
 
-    let nameOrNumberAlreadyExists = false;
-
-    for (let i = 0; i < persons.length; i++) {
-      if (
-        persons[i].name === person[0].name ||
-        persons[i].number === person[0].number
-      ) {
-        alert(
-          `${persons[i].name} or ${persons[i].number} is already added to phonebook`
-        );
-        nameOrNumberAlreadyExists = true;
-        break;
-      }
-    }
-    if (!nameOrNumberAlreadyExists) {
-      console.log("added", persons.concat(person));
-      setPersons(persons.concat(person));
-    }
+  const checkForDuplicates = (person) => {
+    return persons.some((el) =>
+      el.name.toLowerCase() === person.name.toLowerCase() ||
+      el.number === person.number
+    );
   };
 
   // Event handler for updating newName state as user types
