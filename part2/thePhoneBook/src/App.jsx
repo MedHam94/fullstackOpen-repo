@@ -15,23 +15,36 @@ const App = () => {
     console.log("effect");
     axios.get("http://localhost:3001/persons").then((response) => {
       console.log(response.data);
-      setPersons(response.data)
+      setPersons(response.data);
     });
   }, []);
 
   // Event handler for add a new name to persons array
   const addPerson = (event) => {
     event.preventDefault();
-    const person = { name: newName, number: newNumber };
-    
-    !checkForDuplicates(person) ? setPersons((prevPersons) => [...prevPersons, person]) : alert(`${newName}  is already added to phonebook`)
+    const person = {
+      name: newName,
+      number: newNumber,
+    };
+    axios
+      .post("http://localhost:3001/persons", person)
+      .then((response) => {
+        if (!checkForDuplicates(response.data)) {
+          setPersons((prevPersons) => [...prevPersons, response.data]);
+        } else {
+          throw new Error(`${newName} is already added to phonebook`);
+        }
+      })
+      .catch((err) => alert(err));
+
+    // !checkForDuplicates(person) ? setPersons((prevPersons) => [...prevPersons, person]) : alert(`${newName}  is already added to phonebook`);
   };
 
-
   const checkForDuplicates = (person) => {
-    return persons.some((el) =>
-      el.name.toLowerCase() === person.name.toLowerCase() ||
-      el.number === person.number
+    return persons.some(
+      (el) =>
+        el.name.toLowerCase() === person.name.toLowerCase() ||
+        el.number === person.number
     );
   };
 
