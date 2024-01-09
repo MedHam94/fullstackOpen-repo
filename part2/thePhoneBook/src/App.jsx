@@ -16,28 +16,44 @@ const App = () => {
     console.log("effect");
     personService
       .getAll()
-      .then(response => setPersons(response))
-      .catch(err => console.log(err))
+      .then((response) => setPersons(response))
+      .catch((err) => console.log(err));
   }, []);
 
   // Event handler for add a new name to persons array
-const addPerson =  (event) => {
-  event.preventDefault();
-  const person = {
-    name: newName,
-    number: newNumber,
+  const addPerson = (event) => {
+    event.preventDefault();
+    const person = {
+      name: newName,
+      number: newNumber,
+    };
+    if (!checkForDuplicates(person)) {
+      personService
+        .create(person)
+        .then((response) =>
+          setPersons((prevPersons) => [...prevPersons, response])
+        )
+        .catch((err) => console.log(err));
+    } else {
+      alert(`${newName} is already added to phonebook`);
+    }
   };
-  if (!checkForDuplicates(person)){
-    personService
-      .create(person)
-      .then(response => setPersons((prevPersons) => [...prevPersons, response]))
-      .catch(err => console.log(err))
 
-  }else{
-    alert(`${newName} is already added to phonebook`);
-  }
-}
-
+  const handleDelete = (id) => {
+    const name = persons.find(el => el.id === id)
+    console.log(name);
+    if (window.confirm(`delete ${name.name}?`)) {
+      personService
+        .deletePerson(id)
+        .then((res) => {
+          console.log("Deleted", res);
+          setPersons((prevPersons) =>
+            prevPersons.filter((person) => person.id !== id)
+          );
+        })
+        .catch((err) => console.log(err));
+    }
+  };
 
   const checkForDuplicates = (person) => {
     return persons.some(
@@ -49,12 +65,12 @@ const addPerson =  (event) => {
 
   // Event handler for updating newName state as user types
   const handleNameChange = (event) => {
-    console.log("this is input hundler", event.target.value);
+    console.log("this is input handler", event.target.value);
     setNewName(event.target.value);
   };
 
   const handleNumberChange = (event) => {
-    console.log("this is input hundler", event.target.value);
+    console.log("this is input handler", event.target.value);
     setNewNumber(event.target.value);
   };
 
@@ -85,7 +101,7 @@ const addPerson =  (event) => {
 
       <h2>Numbers</h2>
 
-      <Persons filterPerson={filterPerson} />
+      <Persons filterPerson={filterPerson} deletePerson={handleDelete} />
     </div>
   );
 };
