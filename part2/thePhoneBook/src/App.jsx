@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
-import PersonForm from "./PersonForm";
-import Filter from "./Filter";
-import Persons from "./Persons";
+import personService from "./services/notes";
+import PersonForm from "./components/PersonForm";
+import Filter from "./components/Filter";
+import Persons from "./components/Persons";
+// import { create } from "json-server";
 
 const App = () => {
   // State variable for managing persons array and newName
@@ -13,10 +14,10 @@ const App = () => {
 
   useEffect(() => {
     console.log("effect");
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log(response.data);
-      setPersons(response.data);
-    });
+    personService
+      .getAll()
+      .then(response => setPersons(response))
+      .catch(err => console.log(err))
   }, []);
 
   // Event handler for add a new name to persons array
@@ -27,10 +28,11 @@ const addPerson =  (event) => {
     number: newNumber,
   };
   if (!checkForDuplicates(person)){
-    axios
-    .post("http://localhost:3001/persons", person)
-    .then(response =>{setPersons((prevPersons) => [...prevPersons, response.data])})
-    .catch(err => console.log(err))
+    personService
+      .create(person)
+      .then(response => setPersons((prevPersons) => [...prevPersons, response]))
+      .catch(err => console.log(err))
+
   }else{
     alert(`${newName} is already added to phonebook`);
   }
