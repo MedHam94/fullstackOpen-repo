@@ -20,25 +20,22 @@ const App = () => {
   }, []);
 
   // Event handler for add a new name to persons array
-  const addPerson = async (event) => {
-    event.preventDefault();
-    const person = {
-      name: newName,
-      number: newNumber,
-    };
-  
-    try {
-      if (!checkForDuplicates(person)) {
-        const response = await axios.post("http://localhost:3001/persons", person);
-        setPersons((prevPersons) => [...prevPersons, response.data]);
-      } else {
-        alert(`${newName} is already added to phonebook`);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+const addPerson =  (event) => {
+  event.preventDefault();
+  const person = {
+    name: newName,
+    number: newNumber,
   };
-  
+  if (!checkForDuplicates(person)){
+    axios
+    .post("http://localhost:3001/persons", person)
+    .then(response =>{setPersons((prevPersons) => [...prevPersons, response.data])})
+    .catch(err => console.log(err))
+  }else{
+    alert(`${newName} is already added to phonebook`);
+  }
+}
+
 
   const checkForDuplicates = (person) => {
     return persons.some(
