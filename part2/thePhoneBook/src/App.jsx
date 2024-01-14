@@ -3,6 +3,7 @@ import personService from "./services/notes";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification"
 // import { create } from "json-server";
 
 const App = () => {
@@ -11,6 +12,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
+  const [msg, setMsg] = useState(null)
+  const [style, setStyle] = useState()
 
   useEffect(() => {
     console.log("effect");
@@ -20,6 +23,28 @@ const App = () => {
       .catch((err) => console.log(err));
   }, []);
 
+
+  const success= {
+    backgroundColor:"grey",
+    color:"darkGreen",
+    border:"5px solid green",
+    padding:"10px",
+    margin:"10px 40px",
+    borderRadius:"10px",
+    fontWeight:"600",
+    fontSize:"25px"
+  }
+
+  const fail = {
+    backgroundColor:"grey",
+    color:"darkRed",
+    border:"5px solid red",
+    padding:"10px",
+    margin:"10px 40px",
+    borderRadius:"10px",
+    fontWeight:"600",
+    fontSize:"25px"
+  }
   // Event handler for add a new name to persons array
   const addPerson = (event) => {
     event.preventDefault();
@@ -30,12 +55,24 @@ const App = () => {
     if (!checkForDuplicates(person)) {
       personService
         .create(person)
-        .then((response) =>
+        .then((response) =>{
           setPersons((prevPersons) => [...prevPersons, response])
-        )
-        .catch((err) => console.log(err));
+          setStyle(success)
+          setMsg(`${response.name} has been Added`)
+          setTimeout(()=>{
+            setMsg(null)
+          },5000)
+        })
+        .catch((err) => {
+          console.log(err)
+        });
     } else {
-      alert(`${newName} is already added to phonebook`);
+      // alert(`${newName} is already added to the Phonebook`);
+      setStyle(fail)
+      setMsg(`${person.name} is already existed`)
+      setTimeout(()=>{
+        setMsg(null)
+      },5000)
     }
   };
 
@@ -49,7 +86,8 @@ const App = () => {
           console.log("Deleted", res);
           setPersons((prevPersons) =>
             prevPersons.filter((person) => person.id !== id)
-          );
+          )
+          
         })
         .catch((err) => console.log(err));
     }
@@ -86,7 +124,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-
+      <Notification message={msg} style={style}/>
       <Filter search={search} handleSearchChange={handleSearchChange} />
 
       <h2>Add new</h2>
