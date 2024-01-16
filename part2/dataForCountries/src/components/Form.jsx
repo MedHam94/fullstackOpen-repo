@@ -1,15 +1,12 @@
-const Form = ({onSubmit, search, handleSearchChange}) =>{
-    return (
-        <form onSubmit={onSubmit}>
-            <div>
-            Find Countries: <input value={search} onChange={handleSearchChange} required/>
-            </div>
-            <div>
-                <button type="submit">Search</button>
-            </div>
-        </form>
-    )
-}
+const Form = ({ search, handleSearchChange }) => {
+  return (
+    <form>
+      <div>
+        Find Countries:{" "}
+        <input value={search} onChange={handleSearchChange} required />
+      </div>
+    </form>
+  );
+};
 
-
-export default Form
+export default Form;

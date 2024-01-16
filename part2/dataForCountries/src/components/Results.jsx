@@ -1,12 +1,12 @@
-const Results = ({message})=>{
-if(message=== null){
-    return null
-}
+const Results = ({filterResult})=>{
+
 
     return (
-        <div>
-            {message}
-        </div>
+        <ul>
+            {filterResult.map(el => {
+                return <li key={el.altSpellings[0]}>{el.name.common}</li>
+            })}
+        </ul>
     )
 }
 
