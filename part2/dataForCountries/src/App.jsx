@@ -9,12 +9,14 @@ const App = () => {
   const [search, setSearch] = useState("");
   const [msg, setMsg] = useState([]);
   const [error, setError] = useState("");
+  const [show, setShow] = useState(false);
+
   const [info, setInfo] = useState({
-    name: '',
+    name: "",
     capital: [],
     area: 0,
-    flags:'',
-    languages: {}
+    flags: "",
+    languages: {},
   });
 
   const handleSearchChange = (event) => {
@@ -36,59 +38,72 @@ const App = () => {
           );
           console.log("this is country", results);
           if (results.length == 1) {
-            setMsg([])
+            setMsg([]);
             axios
               .get(
                 `https://studies.cs.helsinki.fi/restcountries/api/name/${results[0].name.common.toLowerCase()}`
               )
               .then((res) => {
                 console.log(res.data);
-                setInfo(res.data)
+                setInfo(res.data);
               })
               .catch((err) => console.log(err));
           } else if (results.length <= 10) {
             setError("");
             setMsg(results);
             setInfo({
-              name: '',
+              name: "",
               capital: [],
               area: 0,
-              flags:'',
-              languages: {}
-            })
-          }else if(results.length == 0){
+              flags: "",
+              languages: {},
+            });
+          } else if (results.length == 0 || show) {
             setMsg([]);
             setError("0 result");
             setInfo({
-              name: '',
+              name: "",
               capital: [],
               area: 0,
-              flags:'',
-              languages: {}
-            })
-          }
-           else {
+              flags: "",
+              languages: {},
+            });
+          } else {
             setMsg([]);
             setError("Too many matches, specify another filter");
             setInfo({
-              name: '',
+              name: "",
               capital: [],
               area: 0,
-              flags:'',
-              languages: {}
-            })
+              flags: "",
+              languages: {},
+            });
           }
         })
         .catch((err) => console.log(err));
     }
   };
 
+  const handleClick = (id) => {
+
+    axios
+      .get(
+        `https://studies.cs.helsinki.fi/restcountries/api/name/${id.toLowerCase()}`
+      )
+      .then((res) => {
+        console.log(res.data);
+        setInfo(res.data);
+      })
+      .catch((err) => console.log(err));
+
+  };
+
   return (
     <>
       <Form search={search} handleSearchChange={handleSearchChange} />
-      <Results filterResult={msg} />
+      <Results filterResult={msg} handleClick={handleClick} />
       <Error error={error} />
-      <Country info={info}/>
+      <Country info={info} />
     </>
   );
 };
