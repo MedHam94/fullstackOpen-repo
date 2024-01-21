@@ -28,12 +28,18 @@ let persons = [
 ]
 
 
-app.get('/', (req,res)=> res.send('<h1>Hello World</h1>'))
+app.get('/', (req, res) => res.send('<h1>Hello World</h1>'))
 
-app.get('/api/persons/', (req, res)=>{
-   res.json(persons)
+app.get('/api/persons/', (req, res) => {
+    res.json(persons)
 })
 
-app.listen(PORT, () =>{
+app.get('/info', (req, res) => {
+    // console.log({date: new Date()});
+    console.log(persons.length);
+    res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`)
+})
+
+app.listen(PORT, () => {
     console.log(`The app in running in ${PORT}`);
 })
