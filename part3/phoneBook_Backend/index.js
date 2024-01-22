@@ -99,5 +99,5 @@ app.delete('/api/persons/:id', (req, res) => {
 
 
 app.listen(PORT, () => {
-    console.log(`The app in running in http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`)
 })
