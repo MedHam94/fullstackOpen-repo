@@ -56,7 +56,7 @@ const App = () => {
       personService
         .create(person)
         .then((response) =>{
-          setPersons((prevPersons) => [...prevPersons, response])
+          setPersons([...persons,response])
           setStyle(success)
           setMsg(`${response.name} has been Added`)
           setTimeout(()=>{
