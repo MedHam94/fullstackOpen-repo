@@ -1,145 +1,135 @@
-import { useState, useEffect } from "react";
-import personService from "./services/notes";
+import { useEffect, useState } from "react";
+import personServices from "./services/persons";
+import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
-import Persons from "./components/Persons";
-import Notification from "./components/Notification"
-// import { create } from "json-server";
+import Notif from "./components/Notif";
 
 const App = () => {
-  // State variable for managing persons array and newName
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
-  const [msg, setMsg] = useState(null)
-  const [style, setStyle] = useState()
+  const [errorMessage, setMessage] = useState(null);
 
-  useEffect(() => {
-    console.log("effect");
-    personService
-      .getAll()
-      .then((response) => setPersons(response))
-      .catch((err) => console.log(err));
-  }, []);
+  const generateID = () => {
+    return Math.floor(Math.random() * 1000000); 
+  };
 
-
-  const success= {
-    backgroundColor:"grey",
-    color:"darkGreen",
-    border:"5px solid green",
-    padding:"10px",
-    margin:"10px 40px",
-    borderRadius:"10px",
-    fontWeight:"600",
-    fontSize:"25px"
-  }
-
-  const fail = {
-    backgroundColor:"grey",
-    color:"darkRed",
-    border:"5px solid red",
-    padding:"10px",
-    margin:"10px 40px",
-    borderRadius:"10px",
-    fontWeight:"600",
-    fontSize:"25px"
-  }
-  // Event handler for add a new name to persons array
-  const addPerson = (event) => {
+  const cleanForm = () => {
+    setNewName("");
+    setNewNumber("");
+  };
+  const submitForm = (event) => {
     event.preventDefault();
+    console.log("button clicked", event.target);
+
     const person = {
       name: newName,
       number: newNumber,
+      id: `${generateID()}`,
     };
-    if (!checkForDuplicates(person)) {
-      personService
-        .create(person)
-        .then((response) =>{
-          setPersons([...persons,response])
-          setStyle(success)
-          setMsg(`${response.name} has been Added`)
-          setTimeout(()=>{
-            setMsg(null)
-          },5000)
-        })
-        .catch((err) => {
-          console.log(err)
+
+    if (checkDuplicate(persons)) {
+      alert(`${newName} is already existed`);
+      if (
+        window.confirm(
+          `${newName} is already added to the phonebook, replace the old number?`
+        )
+      ) {
+        const existingNum = persons.find((el) => el.name === newName);
+        const updateNum = { ...existingNum, number: newNumber };
+
+        console.log('existing',existingNum);
+
+        personServices.update(existingNum.id, updateNum).then((res) => {
+          personServices.getAll().then((result) => {
+            console.log("Promise fulfilled");
+            setPersons(result.data);
+          }).catch(err=>console.error(err));
         });
+        cleanForm();
+      }
     } else {
-      // alert(`${newName} is already added to the Phonebook`);
-      setStyle(fail)
-      setMsg(`${person.name} is already existed`)
-      setTimeout(()=>{
-        setMsg(null)
-      },5000)
+      personServices.createPerson(person).then((result) => {
+        console.log(result);
+        setPersons((result) => {
+          return [...result, person];
+        });
+        cleanForm();
+
+        setMessage(`Added ${newName}`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 1500);
+      });
     }
   };
 
   const handleDelete = (id) => {
-    const name = persons.find(el => el.id === id)
-    console.log(name);
-    if (window.confirm(`delete ${name.name}?`)) {
-      personService
-        .deletePerson(id)
-        .then((res) => {
-          console.log("Deleted", res);
-          setPersons((prevPersons) =>
-            prevPersons.filter((person) => person.id !== id)
-          )
-          
-        })
-        .catch((err) => console.log(err));
+    const personToDelete = persons.find((el) => el.id === id);
+    console.log(personToDelete, persons);
+    if (window.confirm(`Delete ${personToDelete.name}`)) {
+      personServices.deletePerson(id).then((res) => {
+        console.log(persons);
+        setPersons((result) => {
+          return result.filter((el) => el.id !== id);
+        });
+      });
     }
   };
 
-  const checkForDuplicates = (person) => {
-    return persons.some(
-      (el) =>
-        el.name.toLowerCase() === person.name.toLowerCase() ||
-        el.number === person.number
-    );
-  };
+  useEffect(() => {
+    console.log("effect");
+    personServices.getAll().then((result) => {
+      console.log("Promise fulfilled");
+      setPersons(result.data);
+    });
+  }, []);
 
-  // Event handler for updating newName state as user types
   const handleNameChange = (event) => {
-    console.log("this is input handler", event.target.value);
+    console.log(event.target.value);
     setNewName(event.target.value);
   };
-
   const handleNumberChange = (event) => {
-    console.log("this is input handler", event.target.value);
+    console.log(event.target.value);
     setNewNumber(event.target.value);
   };
 
-  const handleSearchChange = () => {
-    console.log("this is search letter", event.target.value);
+  const handleSearch = (event) => {
     setSearch(event.target.value);
   };
 
-  const filterPerson = persons.filter((el) =>
-    el.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const checkDuplicate = (persons) => {
+    return persons.some((person) => person.name === newName);
+  };
+
+  const filteredList =
+    search === ""
+      ? persons
+      : persons.filter((person) =>
+          person.name.toLocaleLowerCase().includes(search)
+        );
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={msg} style={style}/>
-      <Filter search={search} handleSearchChange={handleSearchChange} />
+      <Notif message={errorMessage} />
+      <Filter handleSearch={handleSearch} search={search} />
 
-      <h2>Add new</h2>
+      <h2>add new</h2>
 
       <PersonForm
-        onSubmit={addPerson}
-        newName={newName.name}
         handleNameChange={handleNameChange}
-        newNumber={newNumber}
+        newName={newName}
         handleNumberChange={handleNumberChange}
+        newNumber={newNumber}
+        submitForm={submitForm}
       />
 
       <h2>Numbers</h2>
 
-      <Persons filterPerson={filterPerson} deletePerson={handleDelete} />
+      <Persons persons={filteredList} handleDelete={handleDelete} />
     </div>
   );
 };

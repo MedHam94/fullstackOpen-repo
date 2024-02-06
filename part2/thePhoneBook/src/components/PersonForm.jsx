@@ -1,18 +1,17 @@
-const PersonForm = (props) =>{
+const PersonForm = ({handleNameChange,newName,handleNumberChange,newNumber,submitForm})=>{
     
-    
-    return (
-        <form onSubmit={props.onSubmit}>
-        <div>
-          name: <input value={props.newName} onChange={props.handleNameChange} required/>
-        </div>
-        <div>
-          number: <input value={props.newNumber} onChange={props.handleNumberChange} required/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+    return(
+        <form>
+            <div>
+                name: <input type="text" onChange={handleNameChange} value={newName} required  />
+            </div>
+            <div>
+                number: <input type="text" onChange={handleNumberChange} value={newNumber} required  />
+            </div>
+            <div>
+                <button type="submit" onClick={submitForm}>add</button>
+            </div>
+        </form>
     )
 }
 

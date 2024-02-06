@@ -1,11 +1,10 @@
-const Filter = (props) => {
-  return (
-    <form>
-      <div>
-        Filter shown with <input value={props.search} onChange={props.handleSearchChange} />
-      </div>
-    </form>
-  );
-};
+const Filter = ({handleSearch,search}) =>{
+    return (
+        <div>
+            filter shown with:  
+            <input type="text" onChange={handleSearch} value={search}/>
+        </div>
+    )
+}
 
-export default Filter;
+export default Filter
