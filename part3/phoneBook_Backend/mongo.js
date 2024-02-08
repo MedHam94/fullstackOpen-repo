@@ -10,7 +10,7 @@ const personSchema = new mongoose.Schema({
   number: String,
 });
 
-personSchema.set("toJSON", {
+personSchema.set('toJSON', {
   transform: (document, returnObj) => {
     returnObj.id = returnObj._id.toString();
     delete returnObj._id;
@@ -18,4 +18,4 @@ personSchema.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Persons", personSchema);
+module.exports = mongoose.model('Persons', personSchema);
